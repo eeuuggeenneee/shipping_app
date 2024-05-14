@@ -189,7 +189,6 @@
 
             console.log('clicked');
         }
-
         Livewire.on('closeviewall', () => {
             clickall();
           });
@@ -199,12 +198,10 @@
         inputs.forEach(input => {
             input.addEventListener('input', function() {
                 // Check if all input fields are empty
-                const allEmpty = [...inputs].every(input => input.value.trim() === '');
-
-                // If all input fields are empty, do something
+                const allEmpty = [...inputs].every(input => input.value.trim() === null);
                 if (allEmpty) {
                     console.log('All input fields are empty');
-                    clickall();
+                    Livewire.emit('clearFilters');
                 }
             });
         });

@@ -12,6 +12,8 @@ class BookingListTwo extends Component
 {
 
     public $pod, $sto, $po, $booking, $container;
+
+    protected $listeners = ['clearFilters'];
     public function clearFilters()
     {
         $this->pod = null;
@@ -27,7 +29,8 @@ class BookingListTwo extends Component
         $currentDate = Carbon::now();
         $twoWeeksFromNow = $currentDate->addWeeks(2)->toDateString(); // Convert to 'YYYY-MM-DD' format
         $query = BookingStatus::whereRaw("CONVERT(date, eta, 103) <= ?", [$twoWeeksFromNow])
-            ->whereIn('booking_status', [0, 2]);
+            ->whereIn('booking_status', [0, 2])
+            ->orderBy('eta', 'desc');
 
         // Apply filters if they are set
         if ($this->pod) {
@@ -36,7 +39,8 @@ class BookingListTwo extends Component
         if ($this->sto) {
             $query->whereHas('booking', function ($q) {
                 $q->where('sto_number', 'like', '%' . $this->sto . '%');
-            });        }
+            });
+        }
         if ($this->po) {
             $query->whereHas('booking', function ($q) {
                 $q->where('customer_po', 'like', '%' . $this->po . '%');
@@ -55,7 +59,6 @@ class BookingListTwo extends Component
 
         // Execute the query
         $bookings = $query->get();
-
 
         return view('livewire.booking-list-two', ['bookings' => $bookings]);
     }
