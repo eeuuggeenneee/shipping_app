@@ -24,6 +24,7 @@ class BookingListTwo extends Component
 
         $this->emit('closeviewall');
     }
+
     public function render()
     {
         $currentDate = Carbon::now();

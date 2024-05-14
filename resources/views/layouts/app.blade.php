@@ -196,20 +196,6 @@
             </div>
         </nav>
 
-        <div class="modal fade" id="staticBackdrop" tabindex="-1" data-bs-backdrop="static"
-            aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div id="modalbody"></div>
-
-                    <div class="modal-footer"><button class="btn btn-success"
-                            type="button">Acknowledge</button><button class="btn btn-outline-primary" type="button"
-                            data-bs-dismiss="modal">Cancel</button>
-                    </div>
-                </div>
-
-            </div>
-        </div>
 
         <div class="content"> @yield('content')</div>
 
