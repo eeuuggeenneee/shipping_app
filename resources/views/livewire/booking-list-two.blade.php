@@ -3,7 +3,7 @@
         <div class="col-3 mb-5">
             <div class="mb-3" style="display: flex; justify-content: space-between; align-items: center;">
                 <h2 class="card-title mb-0">Filter</h2>
-                <button wire:click="clearFilters" class="btn btn-sm btn-primary">Clear Filter</button>
+                <button wire:click="clearFilters" class="btn btn-sm btn-warning">Clear Filter</button>
             </div>
             <div class="row gx-3">
                 <div class="col-12 col-sm-6 col-xl-12">
@@ -92,7 +92,7 @@
                                         <th class="sort align-middle  text-uppercase" scope="col" data-sort="stonum"
                                             style="min-width:140px">STO No.</th>
                                         <th class="sort align-middle  text-uppercase" scope="col"
-                                            data-sort="dateduration" style="min-width:220px">Lead Time from Order Receipt</th>
+                                            data-sort="dateduration" style="min-width:220px">Lead Time</th>
                                         <th class="align-middle pe-0 " scope="col" style="width:15%;"> </th>
                                     </tr>
                                 </thead>

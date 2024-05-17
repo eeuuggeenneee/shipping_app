@@ -167,7 +167,7 @@
         aria-hidden="true" wire:ignore.self>
         <div class="modal-dialog modal-md">
             <div class="modal-content ">
-                <div class="modal-header bg-primary">
+                <div class="modal-header bg-warning">
                     <h5 class="modal-title text-white dark__text-gray-1100" id="staticBackdropLabel">Booking History
                     </h5>
                     <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close"><span

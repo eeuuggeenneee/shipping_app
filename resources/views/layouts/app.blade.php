@@ -6,10 +6,10 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Shipping App</title>
+    <title>Track Master</title>
 
     <script src="{{ asset('assets/js/config.js') }}"></script>
-    <link rel="icon" href="{{ asset('assets/img/image.png') }}">
+    <link rel="icon" href="{{ asset('vessel.ico') }}">
     <script src="{{ asset('assets/js/js.js') }}"></script>
 
 
@@ -158,6 +158,20 @@
             span.number span:last-child {
                 top: 100%;
             }
+            .logo-container {
+                text-align: center; /* Center align the content */
+            }
+
+            .logo-text {
+                color: white; /* Text color */
+                margin: 0 2px; /* Adjust margin as needed */
+            }
+
+            .tagline {
+                color: white; /* Text color */
+                font-size: 10px; /* Adjust font size as needed */
+                margin: 0 2px; /* Adjust margin as needed */
+            }
         </style>
     </style>
     @livewireStyles
@@ -170,7 +184,7 @@
     <!-- ===============================================-->
     <main class="main" id="top">
 
-        <nav class="navbar navbar-top fixed-top bg-primary navbar-expand" id="navbarDefault">
+        <nav class="navbar navbar-top fixed-top bg-warning navbar-expand" id="navbarDefault">
             <div class="collapse navbar-collapse justify-content-between">
                 <div class="navbar-logo">
                     <button class="btn navbar-toggler navbar-toggler-humburger-icon hover-bg-transparent"
@@ -186,8 +200,11 @@
                                 <div class="d-flex align-items-center">
                                     {{--  <img src="{{ asset('assets/img/removebg.png') }}" alt="phoenix" width="46"
                                         height="46" class="ms-3 d-sm-none d-xl-block">  --}}
-                                    <p class="logo-text text-white d-none d-sm-block mx-2">Shipping App
-                                    </p>
+                                        <div class="logo-container">
+                                            <p class="logo-text text-white fw-bold">Track Master</p>
+                                            <p class="tagline">Track your shipment in near real time</p>
+                                        </div>
+                                        
                                 </div>
                             </div>
                         </div>
@@ -196,7 +213,7 @@
 
                 <ul class="navbar-nav navbar-nav-icons flex-row">
                     <li class="nav-item">
-                        <div class="theme-control-toggle fa-icon-wait px-2"><input
+                        {{-- <div class="theme-control-toggle fa-icon-wait px-2"><input
                                 class="form-check-input ms-0 theme-control-toggle-input" type="checkbox"
                                 data-theme-control="phoenixTheme" value="dark" id="themeControlToggle"><label
                                 class="mb-0 theme-control-toggle-label theme-control-toggle-light"
@@ -221,7 +238,7 @@
                                     <line x1="21" y1="12" x2="23" y2="12"></line>
                                     <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
                                     <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-                                </svg></label></div>
+                                </svg></label></div> --}}
                     </li>
                     <li class="nav-item dropdown">
                         {{--  <a class="nav-link position-relative" href="#" style="min-width: 2.25rem"
