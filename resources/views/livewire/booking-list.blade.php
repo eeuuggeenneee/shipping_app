@@ -210,7 +210,8 @@
                                                 <label>Date Booked:</label>
                                             </div>
                                             <div class="col">
-                                                <label class="fw-bold" id="requser">{{ $details->customer_po ?? '' }}</label>
+                                                <label class="fw-bold" id="requser">{{ isset($details->date_booked) ? $details->date_booked->format('Y-m-d') : '' }}
+                                                </label>
                                             </div>
                                         </div>
                                         <div class="row mb-2">
@@ -238,7 +239,7 @@
                                             </div>
                                         </div>
                                         <div class="row mb-2">
-
+                                            <div id="map"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -296,4 +297,9 @@
     function getdetails(id) {
         Livewire.emit("getdetails", id);
     }
+
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
 </script>
