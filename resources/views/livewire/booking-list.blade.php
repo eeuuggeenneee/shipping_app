@@ -1,3 +1,4 @@
+
 <div>
     <div
         data-list="{&quot;valueNames&quot;:[&quot;ponum&quot;,&quot;stonum&quot;,&quot;booking&quot;,&quot;container&quot;,&quot;podnum&quot;,&quot;currentstat&quot;,&quot;eta&quot;,&quot;provider&quot;,&quot;currentloc&quot;,&quot;datediff&quot;,&quot;status&quot;],&quot;page&quot;:10}">
@@ -19,19 +20,8 @@
                                     </path>
                                 </svg><!-- <span class="fas fa-search search-box-icon"></span> Font Awesome fontawesome.com -->
                             </form>
-                        </div><button class="btn btn-phoenix-secondary px-3 ms-2 me-3"><svg
-                                class="svg-inline--fa fa-filter text-body-secondary" data-fa-transform="down-2"
-                                aria-hidden="true" focusable="false" data-prefix="fas" data-icon="filter" role="img"
-                                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""
-                                style="transform-origin: 0.5em 0.625em;">
-                                <g transform="translate(256 256)">
-                                    <g transform="translate(0, 64)  scale(1, 1)  rotate(0 0 0)">
-                                        <path fill="currentColor"
-                                            d="M3.853 54.87C10.47 40.9 24.54 32 40 32H472C487.5 32 501.5 40.9 508.1 54.87C514.8 68.84 512.7 85.37 502.1 97.33L320 320.9V448C320 460.1 313.2 471.2 302.3 476.6C291.5 482 278.5 480.9 268.8 473.6L204.8 425.6C196.7 419.6 192 410.1 192 400V320.9L9.042 97.33C-.745 85.37-2.765 68.84 3.854 54.87L3.853 54.87z"
-                                            transform="translate(-256 -256)"></path>
-                                    </g>
-                                </g>
-                            </svg><!-- <span class="fa-solid fa-filter text-body-secondary" data-fa-transform="down-2"></span> Font Awesome fontawesome.com --></button>
+                        </div>
+
                     </div>
                     <div class="d-flex align-items-center">
                         <div class="pagination d-none"></div>
@@ -83,29 +73,32 @@
             </div>
         </div>
         <div class="table-responsive scrollbar mx-n1 px-1 mb-4">
-            <table class="table fs-9 mb-0 border-top border-translucent">
+            <table class="table fs-9 mb-0 border-top border-translucent" wire:ignore>
                 <thead>
                     <tr class="text-center">
                         <th class="sort align-middle" scope="col" data-sort="ponum" style="min-width:150px;">PO
                             NO.</th>
                         <th class="sort align-middle " scope="col" data-sort="stonum" style="min-width:150px;">
                             STO NO.</th>
+                        <th class="sort align-middle " scope="col" data-sort="provider" style="min-width:125px;">
+                            PROVIDER
+                        </th>
                         <th class="sort align-middle " scope="col" data-sort="booking" style="min-width:150px;">
                             BOOKING NO. </th>
                         <th class="sort align-middle " scope="col" data-sort="container"
                             style="min-width:150px;">CONTAINER NO.</th>
+                        <th class="sort align-middle " scope="col" data-sort="eta" style="min-width:125px;">ETA
+                            TO POD
+                        </th>
                         <th class="sort align-middle " scope="col" data-sort="podnum" style="min-width:150px;">
                             POD</th>
-                        <th class="sort align-middle " scope="col" data-sort="currentstat"
-                            style="min-width:200px;">CURRENT STATUS</th>
-                        <th class="sort align-middle " scope="col" data-sort="eta" style="min-width:125px;">ETA
-                        </th>
-                        <th class="sort align-middle " scope="col" data-sort="provider" style="min-width:125px;">
-                            PROVIDER
-                        </th>
 
                         <th class="sort align-middle " scope="col" data-sort="currentloc"
                             style="min-width:150px;">NEXT DESTINATION</th>
+                        <th class="sort align-middle " scope="col" data-sort="currentstat"
+                            style="min-width:200px;">CURRENT STATUS</th>
+
+
                         <th class="sort align-middle " scope="col" data-sort="currentloc"
                             style="min-width:120px;">LEAD TIME</th>
                         <th class="sort align-middle " scope="col" data-sort="status" style="min-width:150px;">
@@ -116,29 +109,43 @@
                 <tbody class="list" id="table-flights-body">
                     @foreach ($bookings as $booking)
                         @php
-                            $dateBooked = \Carbon\Carbon::parse($booking->booking->date_booked);
-                            $today = \Carbon\Carbon::now();
-                            $dateDifference = $dateBooked->diffInDays($today);
+                            // Get the status_date
+                            $dateBookedString = optional($booking->bookingoldest)->status_date;
+                            $dateDifference = null;
+                            if (!empty($dateBookedString)) {
+                                try {
+                                    // Parse the date with the given format
+                                    $dateBooked = \Carbon\Carbon::createFromFormat('d/m/Y', $dateBookedString);
+                                    $today = \Carbon\Carbon::now('Asia/Manila');
+                                    // Calculate the difference in days
+                                    $dateDifference = $dateBooked->diffInDays($today);
+                                } catch (\Exception $e) {
+                                    // Log the error if needed
+                                    \Log::error('Failed to parse date: ' . $e->getMessage());
+                                }
+                            }
                         @endphp
                         <tr class="text-center">
+
                             <td class="align-middle ponum ps-0"><a class="fw-bold" data-bs-toggle="modal"
                                     data-bs-target="#staticBackdrop"
                                     onclick="getdetails({{ $booking->booking_id }})">#{{ $booking->booking->customer_po }}</a>
                             </td>
                             <td class="align-middle stonum ps-0">{{ $booking->booking->sto_number }}</td>
+                            <td class="align-middle provider ps-0">{{ $booking->booking->forwarder }}</td>
                             <td class="align-middle booking ps-0">{{ $booking->booking->booking_number }}</td>
                             <td class="align-middle container ps-0">{{ $booking->booking->container_number }}</td>
-                            <td class="align-middle pdonum ps-0">{{ $booking->pod }}</td>
-                            <td class="align-middle currentstat ps-0">
-                                {{ optional($booking->bookingLatest)->status_desc ?? 'N/A' }}</td>
                             <td class="align-middle eta ps-0">{{ $booking->eta ?? 'No Cargo Yet' }}</td>
-                            <td class="align-middle provider ps-0">{{ $booking->booking->forwarder }}</td>
+                            <td class="align-middle pdonum ps-0">{{ $booking->pod }}</td>
                             <td class="align-middle currentloc">
                                 {{ optional($booking->bookingLatest)->status_loc ?? 'N/A' }}</td>
+                            <td class="align-middle currentstat ps-0">
+                                {{ optional($booking->bookingLatest)->status_desc ?? 'N/A' }}</td>
+
                             <td class="align-middle currentloc">
                                 {{ $dateDifference }}</td>
                             <td class="align-middle status ps-0">
-                                @if ($dateDifference > 90)
+                                @if ($dateDifference > 60)
                                     <span class="badge badge-phoenix fs-10 badge-phoenix-danger"> Delayed
                                     @else
                                         <span class="badge badge-phoenix fs-10 badge-phoenix-success"> On Time
@@ -156,9 +163,9 @@
 
     </div>
 
-    <div class="modal fade" id="staticBackdrop" tabindex="-1" data-bs-backdrop="static"
-        aria-labelledby="staticBackdropLabel" aria-hidden="true" wire:ignore.self>
-        <div class="modal-dialog modal-lg">
+    <div class="modal fade" id="staticBackdrop" tabindex="-1" aria-labelledby="staticBackdropLabel"
+        aria-hidden="true" wire:ignore.self>
+        <div class="modal-dialog modal-md">
             <div class="modal-content ">
                 <div class="modal-header bg-primary">
                     <h5 class="modal-title text-white dark__text-gray-1100" id="staticBackdropLabel">Booking History
@@ -167,59 +174,120 @@
                             class="fas fa-times fs-9 text-white dark__text-gray-1100"></span></button>
                 </div>
                 <div class="modal-body">
-                    <h3 class="text-center">CONTAINER NUMBER: {{ $bookingid }} </h3>
-                    <div class="containter py-5 px-5">
-                        <div class="timeline-basic mb-9">
-                            @if (isset($data))
-                                @foreach ($data as $timeline)
-                                    <div class="timeline-item">
-                                        <div class="row g-3">
-                                            <div class="col-auto">
-                                                <div class="timeline-item-bar position-relative">
-                                                    <div
-                                                        class="icon-item icon-item-md rounded-7 border border-translucent">
-                                                        <span class="fa-solid fa-circle text-success fs-9"></span>
-                                                    </div>
-                                                    @if ($loop->last)
-                                                    @else
-                                                    <span class="timeline-bar border-end border-dashed"></span>
-                                                    @endif
-                                                </div>
+                    <div class="row">
+                        <div class="col-5">
+                            <div class="container-wrapper">
+                                <div class="timeline-container fw-semibold">
+                                    <h3 class="mt-3">{{$bookingid}}</h3>
+
+                                    <div class="card-header mt-5">
+                                        <div class="row mb-2">
+                                            <div class="col">
+                                                <label>Booking Number:</label>
                                             </div>
                                             <div class="col">
-                                                <div class="d-flex justify-content-between">
-                                                    <div class="d-flex mb-2">
-                                                        <h6
-                                                            class="lh-sm mb-0 me-2 text-body-secondary timeline-item-title">
-                                                            {{ $timeline['status_desc'] }}
-                                                        </h6>
-                                                    </div>
-                                                    <p
-                                                        class="text-body-quaternary fs-9 mb-0 text-nowrap timeline-time">
-                                                        <svg class="svg-inline--fa fa-clock me-1" aria-hidden="true"
-                                                            focusable="false" data-prefix="far" data-icon="clock"
-                                                            role="img" xmlns="http://www.w3.org/2000/svg"
-                                                            viewBox="0 0 512 512" data-fa-i2svg="">
-                                                            <path fill="currentColor"
-                                                                d="M232 120C232 106.7 242.7 96 256 96C269.3 96 280 106.7 280 120V243.2L365.3 300C376.3 307.4 379.3 322.3 371.1 333.3C364.6 344.3 349.7 347.3 338.7 339.1L242.7 275.1C236 271.5 232 264 232 255.1L232 120zM256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256C0 114.6 114.6 0 256 0zM48 256C48 370.9 141.1 464 256 464C370.9 464 464 370.9 464 256C464 141.1 370.9 48 256 48C141.1 48 48 141.1 48 256z">
-                                                            </path>
-                                                        </svg><!-- <span class="fa-regular fa-clock me-1"></span> Font Awesome fontawesome.com -->{{ $timeline['status_date'] }}
-                                                    </p>
-                                                </div>
-                                                <h6 class="fs-10 fw-normal mb-3"><a class="fw-semibold"
-                                                        href="#!"> {{ $timeline['status_date'] }}</a></h6>
-                                                <p class="fs-9 text-body-secondary w-sm-60 mb-5">
-                                                    {{ $timeline['status_loc'] }}</p>
+                                                <label class="fw-bold" id="battype">{{ $details->booking_number ?? '' }}</label>
                                             </div>
                                         </div>
+                                        <div class="row mb-2">
+                                            <div class="col">
+                                                <label>STO Number:</label>
+                                            </div>
+                                            <div class="col">
+                                                <label class="fw-bold" id="battype">{{ $details->sto_number ?? '' }}</label>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-2">
+                                            <div class="col">
+                                                <label>PO Number:</label>
+                                            </div>
+                                            <div class="col">
+                                                <label class="fw-bold" id="projnamae">{{ $details->customer_po ?? '' }}</label>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-2">
+                                            <div class="col">
+                                                <label>Date Booked:</label>
+                                            </div>
+                                            <div class="col">
+                                                <label class="fw-bold" id="requser">{{ $details->customer_po ?? '' }}</label>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-2">
+                                            <div class="col">
+                                                <label>Items:</label>
+                                            </div>
+                                            <div class="col">
+                                                <label class="fw-bold" id="testreq">Battery {{ $details->batts_qty ?? '' }} pcs</label>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-2">
+                                            <div class="col">
+                                                <label>Forwarder:</label>
+                                            </div>
+                                            <div class="col">
+                                                <label class="fw-bold" id="projnamae">{{ $details->forwarder ?? '' }}</label>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-2">
+                                            <div class="col">
+                                                <label>Carrier:</label>
+                                            </div>
+                                            <div class="col">
+                                                <label class="fw-bold" id="projnamae">{{ $details->carrier ?? '' }}</label>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-2">
+
+                                        </div>
                                     </div>
-                                @endforeach
-                            @endif
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-7">
+                            <div class="container-wrapper timeline_container mx-3 mt-3" style="max-height: 60vh; overflow: auto;">
+                                <div class="timeline_container mb-5">
+                                    <ul class="mx-3">
+                                        @if (isset($data))
+                                            @foreach ($data as $timeline)
+                                                <li>
+                                                    <span></span>
+                                                    <div>
+                                                        <div class="h6"></div>
+                                                        <div class="type">Status: <br><b
+                                                                class="text-primary">{{ $timeline['status_desc'] }}</b>
+                                                        </div>
+
+                                                            <div class="row mb-2">
+                                                                <div class="col-md-6">
+                                                                    <div class="type">
+                                                                        {{--  <br><b>{{ $timeline['eta_ata'] }}</b>  --}}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="type">Current Location:
+                                                                <br><b>{{ $timeline['status_loc'] }}</b>
+                                                            </div>
+
+                                                    </div>
+                                                    <span class="number">
+                                                        <span></span>
+                                                        <span class="mt-3">{{ $timeline['status_date'] }}</span>
+                                                    </span>
+                                                </li>
+                                            @endforeach
+                                        @endif
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
                     </div>
+
+
+
                 </div>
-                <div class="modal-footer"><button
-                        class="btn btn-outline-primary" type="button" data-bs-dismiss="modal">Close</button></div>
+                <div class="modal-footer"><button class="btn btn-outline-primary" type="button"
+                        data-bs-dismiss="modal">Close</button></div>
             </div>
         </div>
     </div>

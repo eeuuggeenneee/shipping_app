@@ -24,6 +24,135 @@
         rel="stylesheet">
 
     <link href="{{ asset('assets/css/theme.min.css') }}" type="text/css" rel="stylesheet" id="style-default">
+    <style>
+        <style>
+            .timeline_container-wrapper {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 1000px;
+                overflow: auto;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+            }
+            .timeline_container-wrapper::-webkit-scrollbar {
+                display: none;
+
+            }
+            .timeline_container {
+                display: flex;
+            }
+
+            .timeline_horizontal.timeline {
+                padding: 20px;
+                /* Adjust the padding value as needed */
+            }
+
+            @keyframes animation-timeline-current {
+                from {
+                    transform: translate(-50%, -50%) scale(0);
+                    opacity: 1;
+                }
+
+                to {
+                    transform: translate(-50%, -50%) scale(2);
+                    opacity: 0;
+                }
+            }
+
+            @import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700');
+
+            .timeline_container ul {
+                margin: 0;
+                list-style: none;
+                position: relative;
+                padding: 1px 50px;
+                color: #000000;
+                font-size: 13px;
+            }
+
+            .timeline_container::-webkit-scrollbar {
+                display: none;
+            }
+
+            .timeline_container ul li {
+                position: relative;
+                margin-left: 30px;
+                background-color: #00000000;
+                padding: 14px;
+                border-radius: 6px;
+                width: 250px;
+                box-shadow: 0 0 4px rgba(0, 0, 0, 0.12), 0 2px 2px rgba(0, 0, 0, 0.537);
+            }
+
+            .timeline_container ul li:not(:first-child) {
+                margin-top: 60px;
+            }
+
+            .timeline_container ul li>span {
+                width: 2px;
+                height: 100%;
+                background: #074198;
+                left: -30px;
+                top: 0;
+                position: absolute;
+            }
+
+            .timeline_container ul li>span:before,
+            .timeline_container ul li>span:after {
+                content: '';
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                border: 2px solid #074198;
+                position: absolute;
+                background: #074198;
+                left: -5px;
+                top: 0;
+            }
+
+            .timeline_container ul li>span:after {
+                top: 100%;
+            }
+
+            .timeline_container ul li>div {
+                margin-left: 10px;
+            }
+
+            .timeline_container div .title,
+            .timeline_container div .type {
+                font-weight: 600;
+                font-size: 12px;
+            }
+
+            .timeline_container div .info {
+                font-weight: 300;
+            }
+
+            .timeline_container div>div {
+                margin-top: 5px;
+            }
+
+            span.number {
+                height: 100%;
+            }
+
+            span.number span {
+                position: absolute;
+                font-size: 10px;
+                left: -50px;
+                font-weight: bold;
+            }
+
+            span.number span:first-child {
+                top: 0;
+            }
+
+            span.number span:last-child {
+                top: 100%;
+            }
+        </style>
+    </style>
     @livewireStyles
 
 </head>

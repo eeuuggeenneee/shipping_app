@@ -44,4 +44,8 @@ class BookingStatus extends Model
     {
         return $this->hasOne(BookingDetail::class, 'booking_id', 'booking_id')->latest('order_step');
     }
+    public function bookingoldest()
+{
+    return $this->hasOne(BookingDetail::class, 'booking_id', 'booking_id')->oldest('order_step');
+}
 }

@@ -11,13 +11,15 @@ class BookingList extends Component
 {
     public $data;
     public $bookingid;
+    public $details;
     protected $listeners = ['getdetails'];
     public function getdetails($id){
         $this->data = BookingDetail::where('booking_id', $id)
         ->orderBy('details_id', 'desc')
         ->get();
-        $this->bookingid = $this->data[0]->container_number;
 
+        $this->bookingid = $this->data[0]->container_number;
+        $this->details = Booking::where('container_number',$this->bookingid)->first();
     }
     public function render()
     {

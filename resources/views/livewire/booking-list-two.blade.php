@@ -77,7 +77,7 @@
                                 <thead>
                                     <tr class="text-center">
                                         <th class="sort white-space-nowrap align-middle pe-3 ps-0 text-uppercase"
-                                            scope="col" data-sort="date" style="min-width:100px">Date
+                                            scope="col" data-sort="date" style="min-width:100px">ETA
                                         </th>
                                         <th class="sort align-middle pe-6 text-uppercase" scope="col"
                                             data-sort="booking" style="min-width:120px">Booking</th>
@@ -99,11 +99,23 @@
                                 <tbody class="list" id="lead-details-table-body">
                                     <tr class="hover-actions-trigger btn-reveal-trigger position-static">
                                         @foreach ($bookings as $booking)
-                                            @php
-                                                $dateBooked = \Carbon\Carbon::parse($booking->booking->date_booked);
-                                                $today = \Carbon\Carbon::now();
+                                        @php
+                                        // Get the status_date
+                                        $dateBookedString = optional($booking->bookingoldest)->status_date;
+                                        $dateDifference = null;
+                                        if (!empty($dateBookedString)) {
+                                            try {
+                                                // Parse the date with the given format
+                                                $dateBooked = \Carbon\Carbon::createFromFormat('d/m/Y', $dateBookedString);
+                                                $today = \Carbon\Carbon::now('Asia/Manila');
+                                                // Calculate the difference in days
                                                 $dateDifference = $dateBooked->diffInDays($today);
-                                            @endphp
+                                            } catch (\Exception $e) {
+                                                // Log the error if needed
+                                                \Log::error('Failed to parse date: ' . $e->getMessage());
+                                            }
+                                        }
+                                    @endphp
                                     <tr class="text-center">
                                         <td class="align-middle date ps-0">{{ $booking->eta }}</td>
                                         <td class="align-middle booking ps-0">{{ $booking->booking->booking_number }}
